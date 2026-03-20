@@ -1,48 +1,53 @@
 package com.example.quan_ly_san_pham.repository;
 
 import com.example.quan_ly_san_pham.entity.Product;
+import com.example.quan_ly_san_pham.util.ConnectionUtil;
+import jakarta.persistence.TypedQuery;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ProductRepository implements IProductRepository{
-    private static List<Product> productList = new ArrayList<>();
-    static {
-        productList.add(new Product(1,"Iphone",2000,"Điện thoại","Apple"));
-        productList.add(new Product(2,"Samsung",1500,"Điện thoại","Samsung"));
-        productList.add(new Product(3,"Xiaomi",1000,"Điện thoại","Xiaomi"));
-    }
+public class ProductRepository implements IProductRepository {
+
     @Override
     public List<Product> findAll() {
+        Session session = ConnectionUtil.sessionFactory.openSession();
+        TypedQuery<Product> query = session.createQuery("from Product", Product.class);
+        List<Product> productList = query.getResultList();
+        session.close();
         return productList;
     }
 
     @Override
     public void save(Product product) {
-        int newId = productList.get(productList.size() - 1).getId() + 1;
-        product.setId(newId);
-        productList.add(product);
+        Session session = ConnectionUtil.sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.save(product);
+
+        transaction.commit();
+        session.close();
     }
 
     @Override
     public Product findById(int id) {
-        for (Product p : productList) {
-            if (p.getId() == id) {
-                return p;
-            }
-        }
-        return null;
+        Session session = ConnectionUtil.sessionFactory.openSession();
+        Product product = session.get(Product.class, id);
+        session.close();
+        return product;
     }
 
     @Override
     public void update(Product product) {
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getId() == product.getId()) {
-                productList.set(i, product);
-                break;
-            }
-        }
+        Session session = ConnectionUtil.sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.update(product);
+
+        transaction.commit();
+        session.close();
     }
 }
