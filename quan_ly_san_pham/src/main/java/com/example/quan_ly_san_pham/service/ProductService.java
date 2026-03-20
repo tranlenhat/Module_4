@@ -32,4 +32,9 @@ public class ProductService implements IProductService{
     public void update(Product product) {
         productRepository.update(product);
     }
+
+    @Override
+    public void delete(int id) {
+        productRepository.delete(id);
+    }
 }
