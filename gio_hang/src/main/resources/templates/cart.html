@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="item : ${cart.values()}">
+
+  <img th:src="${item.image}" width="100">
+
+  <p th:text="${item.name}"></p>
+  <p th:text="${item.price}"></p>
+
+
+  <form action="/cart/update">
+    <input type="hidden" name="id" th:value="${item.id}">
+    <input type="number" name="quantity" th:value="${item.quantity}" min="1">
+    <button>Cập nhật</button>
+  </form>
+
+  <a th:href="@{/cart/remove(id=${item.id})}">Xóa</a>
+
+</div>
+
+<h3>Tổng: <span th:text="${total}"></span></h3>
+
+<a href="/checkout">Thanh toán</a>
+</body>
+</html>
