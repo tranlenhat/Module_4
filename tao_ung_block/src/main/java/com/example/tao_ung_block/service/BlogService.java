@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class BlogService implements IBlogService{
@@ -30,5 +32,15 @@ public class BlogService implements IBlogService{
     @Override
     public void delete(Long id) {
         blogRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Blog> findAll() {
+        return blogRepository.findAll();
+    }
+
+    @Override
+    public List<Blog> findByCategoryId(Long categoryId) {
+        return blogRepository.findByCategoryId(categoryId);
     }
 }
