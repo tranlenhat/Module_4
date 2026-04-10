@@ -11,9 +11,10 @@ import java.util.List;
 
 
 @Service
-public class BlogService implements IBlogService{
+public class BlogService implements IBlogService {
     @Autowired
     private IBlogRepository blogRepository;
+
     @Override
     public Page<Blog> search(String keyword, Pageable pageable) {
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -21,14 +22,17 @@ public class BlogService implements IBlogService{
         }
         return blogRepository.findByTitleContaining(keyword, pageable);
     }
+
     @Override
     public Blog findById(Long id) {
         return blogRepository.findById(id).orElse(null);
     }
+
     @Override
     public void save(Blog blog) {
         blogRepository.save(blog);
     }
+
     @Override
     public void delete(Long id) {
         blogRepository.deleteById(id);
@@ -43,4 +47,18 @@ public class BlogService implements IBlogService{
     public List<Blog> findByCategoryId(Long categoryId) {
         return blogRepository.findByCategoryId(categoryId);
     }
+
+    @Override
+    public List<Blog> searchByTitle(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return blogRepository.findAll();
+        }
+        return blogRepository.findByTitleContaining(keyword);
+    }
+
+    @Override
+    public Page<Blog> findAll(Pageable pageable) {
+        return blogRepository.findAll(pageable);
+    }
+
 }

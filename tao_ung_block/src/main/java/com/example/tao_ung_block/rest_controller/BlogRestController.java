@@ -3,6 +3,8 @@ package com.example.tao_ung_block.rest_controller;
 import com.example.tao_ung_block.entity.Blog;
 import com.example.tao_ung_block.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class BlogRestController {
         return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<Blog> findById(@PathVariable Long id) {
         Blog blog = blogService.findById(id);
         if (blog == null) {
@@ -42,9 +44,23 @@ public class BlogRestController {
         }
         return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
+
     @PostMapping("")
     public ResponseEntity<Blog> create(@RequestBody Blog blog) {
         blogService.save(blog);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Blog>> search(@RequestParam String keyword) {
+        List<Blog> blogs = blogService.searchByTitle(keyword);
+        return new ResponseEntity<>(blogs, HttpStatus.OK);
+    }
+
+    @GetMapping("/load")
+    public ResponseEntity<List<Blog>> loadMore(@RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 2);
+        List<Blog> blogs = blogService.findAll(pageable).getContent();
+        return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 }

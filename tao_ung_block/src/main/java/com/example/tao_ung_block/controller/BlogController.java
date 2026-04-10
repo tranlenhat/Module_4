@@ -22,7 +22,7 @@ public class BlogController {
             ModelMap model
     ) {
         Sort sort = Sort.by("createdAt").descending();
-        Pageable pageable = PageRequest.of(page, 4, sort);
+        Pageable pageable = PageRequest.of(page, 2, sort);
         Page<Blog> blogs = blogService.search(keyword, pageable);
         model.addAttribute("blogs", blogs);
         model.addAttribute("keyword", keyword);
